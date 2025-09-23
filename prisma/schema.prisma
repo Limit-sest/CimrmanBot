@@ -23,6 +23,6 @@ model User {
 
 model timetableUpdate {
   id Int @id @default(autoincrement())
-  date DateTime
-  data String?
+  date String
+  data String
 }

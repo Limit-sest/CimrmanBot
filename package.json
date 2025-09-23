@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@prisma/client": "^6.16.2",
+    "dayjs": "^1.11.18",
     "discord.js": "^14.22.1",
     "prisma": "^6.16.2"
   }
