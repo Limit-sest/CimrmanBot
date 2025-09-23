@@ -1,0 +1,28 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id Int @id @default(autoincrement())
+  discordId String
+  guildId String
+  dutyPosition Int?
+  adminLevel Int @default(0)
+  
+  @@unique([discordId, guildId])
+}
+
+model timetableUpdate {
+  id Int @id @default(autoincrement())
+  date DateTime
+  data String?
+}
