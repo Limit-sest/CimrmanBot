@@ -1,11 +1,18 @@
-import { Events, EmbedBuilder } from 'discord.js';
+import { Events, EmbedBuilder, Client, type Channel } from 'discord.js';
 import dayjs from 'dayjs';
 import { prisma } from '../prisma';
+
+function hashCode(s) {
+  return s.split('').reduce(function (a, b) {
+    a = (a << 5) - a + b.charCodeAt(0);
+    return a & a;
+  }, 0);
+}
 
 export default {
   name: Events.ClientReady,
   once: true,
-  async execute(client) {
+  async execute(client: Client) {
     setInterval(async () => {
       const embed = new EmbedBuilder();
       for (let i = 0; i < 2; i++) {
@@ -26,7 +33,7 @@ export default {
           await prisma.timetableUpdate.findFirst({
             where: {
               date: date,
-              data: data,
+              data: hashCode(JSON.stringify(classData)),
             },
           })
         )
@@ -53,7 +60,22 @@ export default {
             value: text,
           });
         }
+
+        if (cancelled.lenght > 0 || changed.lenght > 0) {
+          prisma.timetableUpdate.create({
+            data: {
+              date: date,
+              data: hashCode(JSON.stringify(classData)),
+            },
+          });
+        }
       }
-    }, 600000);
+
+      const channel = client.channels.cache.get(
+        process.env.ANNOUNCEMENT_CH as string
+      );
+      embed.setTitle('Změny v rozvrhu');
+      channel.send({ embeds: [embed] });
+    }, 6000);
   },
 };
