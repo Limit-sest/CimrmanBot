@@ -28,6 +28,9 @@ export default {
         const classData = data.ChangesForClasses.find(
           (changes) => changes.Class.Id === '29'
         );
+        if (classData === undefined) {
+          continue;
+        }
         const cancelled = classData.CancelledLessons;
         const changed = classData.ChangedLessons;
 
